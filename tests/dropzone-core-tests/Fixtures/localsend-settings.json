@@ -1,0 +1,11 @@
+{
+  "flutter.ls_alias": "Fixture Laptop",
+  "flutter.ls_port": 53399,
+  "flutter.ls_security_context": "FAKE",
+  "flutter.ls_receive_history": [
+    "{\"id\":\"fixture-0001\",\"fileName\":\"fixture-photo.jpg\",\"fileType\":\"image\",\"path\":\"C:\\\\Fixture\\\\Downloads\\\\fixture-photo.jpg\",\"savedToGallery\":false,\"isMessage\":false,\"fileSize\":2048,\"senderAlias\":\"Fixture Phone\",\"timestamp\":\"2026-10-18T09:15:30.250Z\"}",
+    "{\"id\":\"fixture-0002\",\"fileName\":\"broken",
+    "{\"id\":\"fixture-0003\",\"fileName\":\"Hello from the fixture\",\"fileType\":\"text\",\"path\":null,\"savedToGallery\":false,\"isMessage\":true,\"fileSize\":23,\"senderAlias\":\"Fixture Phone\",\"timestamp\":\"2026-10-17T20:01:02.000Z\"}",
+    "{\"id\":\"fixture-0004\",\"fileName\":\"fixture-notes.txt\",\"fileType\":\"text\",\"path\":\"C:\\\\Fixture\\\\Downloads\\\\fixture-notes.txt\",\"savedToGallery\":false,\"isMessage\":false,\"fileSize\":512,\"senderAlias\":\"Fixture Laptop\",\"timestamp\":\"2026-10-16T12:00:00.000Z\"}"
+  ]
+}

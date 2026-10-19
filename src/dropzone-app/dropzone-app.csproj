@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>LocalSendDropzone</AssemblyName>
+    <RootNamespace>Dropzone.App</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- WFO0003 asks WinForms apps to set DPI in code; this is a WPF app (WinForms only for the tray icon), and WPF
+         takes its PerMonitorV2 awareness from app.manifest. -->
+    <NoWarn>$(NoWarn);WFO0003</NoWarn>
+    <Authors>LocalSend Dropzone contributors</Authors>
+    <Copyright>Copyright 2026 LocalSend Dropzone contributors</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\dropzone-core\dropzone-core.csproj" />
+  </ItemGroup>
+
+</Project>

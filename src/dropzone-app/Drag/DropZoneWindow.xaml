@@ -1,0 +1,34 @@
+<Window x:Class="Dropzone.App.Drag.DropZoneWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LocalSend Dropzone"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Focusable="False"
+        AllowDrop="True"
+        FontFamily="Microsoft YaHei UI"
+        DragEnter="OnDragOver"
+        DragOver="OnDragOver"
+        DragLeave="OnDragLeave"
+        Drop="OnDrop">
+    <!-- Sizes inside the Viewboxes are physical pixels (CornerGeometry); the Viewboxes are sized per monitor DPI in code.
+         Only the zone and the device cards have a background: everything else is transparent and lets clicks through. -->
+    <Canvas x:Name="Root">
+        <Viewbox x:Name="ZoneHost" Stretch="Fill">
+            <Border x:Name="ZoneBox" Width="68" Height="68" CornerRadius="14" Background="#E61E2227"
+                    BorderBrush="#40FFFFFF" BorderThickness="1">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False">
+                    <TextBlock Text="&#xE724;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="24"
+                               Foreground="White" HorizontalAlignment="Center" />
+                    <TextBlock Text="LocalSend" FontFamily="Segoe UI" FontSize="10.5" Foreground="White"
+                               HorizontalAlignment="Center" Margin="0,5,0,0" />
+                </StackPanel>
+            </Border>
+        </Viewbox>
+    </Canvas>
+</Window>

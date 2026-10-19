@@ -1,0 +1,41 @@
+<Window x:Class="Dropzone.App.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LocalSend Dropzone 设置"
+        SizeToContent="Height"
+        Width="400"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Microsoft YaHei UI"
+        FontSize="13">
+    <StackPanel Margin="20">
+        <TextBlock Text="共享密码" FontWeight="SemiBold" />
+        <PasswordBox x:Name="PasswordInput" Margin="0,6,0,0" Padding="4,3" />
+        <TextBlock Text="至少 12 个字符；所有电脑填同一个" Foreground="#666666" FontSize="12" Margin="0,4,0,0" />
+        <TextBlock x:Name="PasswordError" Text="密码太短" Foreground="#C42B1C" FontSize="12" Margin="0,2,0,0"
+                   Visibility="Collapsed" />
+
+        <TextBlock Text="专用端口" FontWeight="SemiBold" Margin="0,16,0,0" />
+        <TextBox x:Name="PortInput" Margin="0,6,0,0" Padding="4,3" Width="120" HorizontalAlignment="Left" />
+        <TextBlock x:Name="PortError" Foreground="#C42B1C" FontSize="12" Margin="0,2,0,0" TextWrapping="Wrap"
+                   Visibility="Collapsed" />
+
+        <TextBlock Text="发送区位置" FontWeight="SemiBold" Margin="0,16,0,0" />
+        <ComboBox x:Name="CornerInput" Margin="0,6,0,0" Width="120" HorizontalAlignment="Left">
+            <ComboBoxItem Content="右下角" />
+            <ComboBoxItem Content="左下角" />
+            <ComboBoxItem Content="右上角" />
+            <ComboBoxItem Content="左上角" />
+        </ComboBox>
+
+        <CheckBox x:Name="AutoStartInput" Content="开机自启" Margin="0,16,0,0" />
+
+        <TextBlock x:Name="SaveError" Foreground="#C42B1C" FontSize="12" Margin="0,12,0,0" TextWrapping="Wrap"
+                   Visibility="Collapsed" />
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button x:Name="SaveButton" Content="保存" MinWidth="72" Padding="0,3" IsDefault="True" Click="OnSave" />
+            <Button Content="取消" MinWidth="72" Padding="0,3" Margin="8,0,0,0" IsCancel="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>
