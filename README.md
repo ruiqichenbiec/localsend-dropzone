@@ -1,94 +1,118 @@
 # LocalSend Dropzone
 
-> **Unofficial.** LocalSend Dropzone is an unofficial companion to [LocalSend](https://localsend.org). It is not affiliated with or endorsed by the LocalSend project.
+**Drag a file to the corner of your screen, drop it on a phone or PC, done.**
+A small Windows tray app that adds drag-and-drop sending to [LocalSend](https://localsend.org).
+
+> Unofficial. Not affiliated with or endorsed by the LocalSend project. You still need the official LocalSend app.
 
 Language: English | [简体中文](README.zh-CN.md)
 
-A Windows tray app that runs alongside the official LocalSend app. It does not replace the official app, and it does not change the official app's ports, settings or files.
+## What you get
 
-## What it does
+- **Send without opening anything.** Drag files toward the bottom-right corner of the screen, pick a device, release. No need to find and open LocalSend first.
+- **No "Accept?" prompts between your own PCs.** Install Dropzone on each of your Windows PCs and give them the same password. Files sent between them go straight into Downloads.
+- **Received files show when they arrived.** Files that LocalSend receives get the arrival time as their "date modified", so sorting Downloads by date puts the new ones on top.
 
-- **Runs alongside the official app.** The official app keeps running in the tray, keeps using UDP/TCP 53317, keeps being discovered by phones, and keeps receiving files from phones with its own confirmation prompt.
-- **Corner drag-and-drop sending.** Drag files to a screen corner (bottom-right by default). A drop zone appears; hover over it to pick a device, release to send. No window has to be opened first.
-- **Prompt-free receiving between your own PCs.** Give each PC the same shared password. Between PCs that run this program, the receiving PC does not prompt; files go straight into the Downloads folder.
-- **Modified time.** For files the official app has received, the modified time is set to the moment reception finished. The created time is unchanged.
+Phones keep using the normal LocalSend app. Nothing changes for them.
 
-## What it does on your machine and network
+## How it looks
 
-- **Reads the official app's settings file.** It reads `%APPDATA%\LocalSend\settings.json` and never writes to it. It uses only the alias, port, receive history and the save-to-history flag. The TLS private key stored in that file (`flutter.ls_security_context`) is never extracted, logged or sent. The program reads the file into memory only to find those few values, then zeroes the buffer.
-- **Announces and registers on the LAN with the official app's identity.** Only while the official app is running, it uses the official app's alias and certificate fingerprint. It multicasts an announcement every 30 seconds on each IPv4 adapter (224.0.0.167, UDP 53317). Every 45 seconds it sends register requests to hosts seen in the last 7 days and to the devices on the local subnet (/24 or smaller). When the official app is not running, it stops announcing and registering, so phones do not list a PC they cannot send files to.
-- **Listens on TCP 53319 and shares UDP 53317.** It listens on TCP 53319 (the private port, configurable in Settings) for transfers between PCs that run this program. It shares UDP 53317 with the official app through address reuse; it does not take that port over.
-- **Windows Firewall.** At each start it checks for its inbound rules and, if they are missing, adds inbound allow rules for the private port and UDP 53317 on the Private and Public profiles. Adding them needs administrator approval (UAC); the prompt names LocalSendDropzone. It only manages rules with its own name and never deletes other rules.
-- **File modified times.** For files the official app has just received, it sets the modified time to the completion time, using the official app's receive history. It changes only the modified time, and it leaves files you have edited since then alone.
-- **Start with Windows.** On by default. It adds a per-user Run entry under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`. You can turn this off in Settings.
-- **Local data.** Everything it writes is under `%LOCALAPPDATA%\localsend-dropzone\` (see "Data and logs"). The shared password is encrypted with Windows DPAPI for your user account.
+```
+                          ┌──────────────┐
+                          │ Pixel 8      │
+                          │ My laptop    │  ┌───────────┐
+                          │ Office PC    │  │ LocalSend │
+                          └──────────────┘  └───────────┘
+═══════════════════════════════════════════════════════════ taskbar
+```
+
+1. Drag one or more files toward the bottom-right corner. The **LocalSend** box appears. (Nothing is shown at other times.)
+2. Hover over the box. The devices on your network pop out next to it.
+3. Release on a device to send to it. Release on the box itself to open LocalSend with the files already selected. Release anywhere else to cancel.
+
+The result (sent, declined, failed) appears as a Windows notification.
+
+## Requirements
+
+- Windows 11, 64-bit.
+- The official [LocalSend](https://localsend.org) app, installed and running. It still does the receiving from phones, so turn on its "start with Windows" option and keep it running in the tray.
+- All devices on the same local network.
 
 ## Install
 
-1. Put `publish\LocalSendDropzone.exe` in a fixed folder of your choice (for example `%USERPROFILE%\Apps\localsend-dropzone\publish\`) and run it. The firewall rules and the auto-start entry record the exe's path, so if you move the exe, run it once from its new location.
-2. Each start checks the firewall inbound rules first; listening begins only after they are in place. On the first run, or after the exe has moved, Windows may show one UAC prompt (the program named in it is LocalSendDropzone). It adds inbound rules that allow the private port and UDP 53317 on Private and Public networks, as the official LocalSend does. If you decline, other PCs may be unable to reach this one, and the program shows a notification.
-   - If the Windows Security Alert dialog appears, tick both Private networks and Public networks, then click Allow access.
-   - If Windows already has a rule that blocks this program (for example, the dialog was closed with Private unticked), an allow rule will not help. The program notifies you to allow LocalSendDropzone in "Allow an app through Windows Firewall". The program never deletes other firewall rules.
-3. Open Settings from the tray icon and fill in on each PC:
-   - **Shared password:** at least 12 characters, the same on every PC. It is saved with Windows DPAPI for the current user, so the file contains no plain text.
-   - **Private port:** default 53319. It must be the same on every PC, and it must not be 53317 or the port set in the official app's settings.
-   - The drop zone position and start-with-Windows (on by default) are also set here.
-4. The official LocalSend app must keep running and be set to start with Windows. Each start checks both (when the program starts with Windows, it gives the official app two minutes to launch first). If either is not met, the program only shows a notification; it never changes the official app's settings. The start-with-Windows reminder appears once, when it is first found off or changes from on to off. The program also notifies you once if the official app exits while running, and once if "save to history" is turned off in the official app.
+1. Download `LocalSendDropzone.exe` from [Releases](https://github.com/ruiqichenbiec/localsend-dropzone/releases), or build it yourself (see [Build from source](#build-from-source)).
+   - The exe is not code-signed, so Windows SmartScreen may warn you. Click **More info → Run anyway**.
+2. Put it in a folder where it can stay, for example `%USERPROFILE%\Apps\LocalSend Dropzone\`, and run it. A tray icon appears.
+   - Moving the exe later is fine; just run it once from the new place.
+3. Let it through Windows Firewall. Other PCs and phones need to reach it.
+   - If Windows shows "Windows Security Alert", tick **both** Private and Public networks and click **Allow access**.
+   - Dropzone may also ask for administrator approval (UAC) once to add its own firewall rules. Click **Yes**.
+4. Right-click the tray icon → **设置 (Settings)** and set a **shared password** (at least 12 characters).
+5. Repeat on your other Windows PCs with the **same password**.
 
-## Use
+That's it. Start with Windows is on by default.
 
-- **Send:** drag one or more files to the screen corner and the drop zone appears. Hover over it and the device list opens toward the inside of the screen (this PC is not listed). Release on a device to send at once; the result appears as a Windows notification.
-  - Another PC running this program: sent over the private port; the receiver accepts automatically.
-  - A phone, or a PC running only the official app: the normal official flow, where the recipient confirms in its app. If the recipient requires a PIN, a small box asks you for it.
-  - If the other PC's private port answers "wrong password", the send switches to the normal flow. You get a notice ("password mismatch, switched to normal send"), and the recipient's official app prompts.
-- **Receive:** after files arrive over the private channel, you get one notification per transfer. For one file it shows the file name (clicking selects it in Explorer); for several, "N files received" (clicking opens the folder).
-- **Hand to the official app:** release on the drop zone itself and the files are handed to the running official app window, where you pick a device. If the handover fails, the official window comes to the front and you are asked to drag the files into it.
-- **Cancel:** release somewhere else; the drop zone hides.
-- **Tray menu:**
-  - Settings
-  - Open the "Downloads" folder
-  - Pause receiving: pauses only the private-channel receiving; the official app is not affected. The pause is not remembered; receiving resumes after an exit or restart.
-  - Exit
+## Everyday use
 
-## Known limitations
+| You want to… | Do this |
+|---|---|
+| Send to a phone or PC | Drag files to the corner, hover the box, release on the device. |
+| Choose the device in LocalSend's own window | Release on the box itself. |
+| Send to an iPhone | Open LocalSend on the iPhone first. iOS only lets it receive while it is open. |
+| Receive from your own PCs | Nothing to do. Files land in Downloads and you get one notification. |
+| Receive from a phone | As before: accept in the LocalSend window on the PC. |
+| Stop auto-receiving for a while | Tray menu → **暂停接收 (Pause receiving)**. It resumes on the next start. |
+| Move the box to another corner | Tray menu → **设置 (Settings)** → corner. |
 
-- **iPhone:** an iPhone can receive files, and appears in the device list, only while LocalSend is open in the foreground.
-- **Phone to PC:** every transfer needs a confirmation on the PC.
-- **Logged-off PCs:** when a PC is on but no one is logged in, the private channel cannot receive. The official path is unaffected and still works under its own settings.
-- **Modified times:** these depend on the official app's "save to history". If that is turned off in the official app, modified times are not corrected. History keeps only the latest 30 entries; if you receive many files at once, earlier entries may be pushed out before this program processes them. Files you changed after receiving them are left alone.
-- **Network:** only works on a local network; no cross-subnet or internet use.
-- **System:** Windows only.
-- **Language:** the tray menu, the Settings window and the notifications are currently in Chinese.
+If a phone asks for a PIN, Dropzone shows a small box for it.
 
-## Data and logs
+## Troubleshooting
 
-The data folder is `%LOCALAPPDATA%\localsend-dropzone\`:
+**A device is missing from the list.**
+Open LocalSend on that device and make sure it is on the same Wi-Fi. Wait a few seconds; the list refreshes when you start dragging.
 
-- `settings.json`: settings. The shared password is stored only in DPAPI-encrypted form.
-- `cert.bin`: the self-signed certificate for the private channel, also stored encrypted.
-- `seen-history.json`, `known-hosts.json`: internal records of this program.
-- `logs\app.log`: the log, rolled daily and kept for 14 days. The shared password is never logged, and PIN and token values are masked.
+**My phone can't see this PC.**
+The official LocalSend app on this PC must be running. Dropzone shows a notification when it is not.
 
-This program only reads the official app's `%APPDATA%\LocalSend\settings.json`; it never writes to it.
+**My other PC still asks me to accept.**
+Check that Dropzone is running on both PCs and that the passwords match. When they don't, you get a "密码不一致" (password mismatch) notification and the file is sent the normal way instead. The clocks of the two PCs must also be within 2 minutes of each other.
 
-## Build
+**"Windows 防火墙阻止了本程序…" (Windows Firewall is blocking this app).**
+Windows has a rule that blocks Dropzone, usually because the firewall dialog was closed without allowing it. Open Control Panel → Windows Defender Firewall → **Allow an app through Windows Firewall**, find LocalSendDropzone, and tick Private and Public.
 
-- Requires the .NET 10 SDK.
-- Layout: `src/dropzone-core` (core library), `src/dropzone-app` (tray app), `tests/dropzone-core-tests` (tests).
-- Design notes and test findings (in Chinese) are in `docs/superpowers/specs/` and `docs/notes/`.
-- Run the tests from the repository root:
+## Good to know
 
-  ```
-  dotnet test
-  ```
+- **Only works inside your local network.** No internet or cross-network transfers.
+- **Phone → PC always needs a click on the PC.** Auto-receive works only between PCs that run Dropzone.
+- **Auto-receive needs someone logged in** on the receiving PC.
+- **Arrival times rely on LocalSend's history.** If you turn off "save to history" in LocalSend, Dropzone can't fix the times (it tells you once). Files you edit after receiving them are left alone.
+- **The menus and notifications are in Chinese** for now.
 
-- Publish:
+## What it does behind the scenes
 
-  ```
-  dotnet publish src/dropzone-app -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
-  ```
+Dropzone never changes LocalSend's settings, ports or files. On your PC and network it:
 
-  The output is `publish\LocalSendDropzone.exe`. `publish\` is listed in `.gitignore`.
+- **Reads LocalSend's settings file** (`%APPDATA%\LocalSend\settings.json`) to learn this PC's LocalSend name, port and receive history. It never writes to it, and never extracts, logs or sends the private key stored in it.
+- **Introduces itself as this PC's LocalSend.** When it sends, and every 30 seconds while LocalSend is running, it uses LocalSend's own name and certificate fingerprint, so other devices still see one entry for this PC, not two. It also contacts devices it has seen in the last 7 days to keep the list fresh.
+- **Listens on TCP port 53319** for files from your other PCs. Each transfer must carry a code derived from the shared password; the password itself never goes over the network. The port can be changed in Settings (it must be the same on all your PCs).
+- **Shares UDP port 53317** with LocalSend to hear devices announce themselves. It does not take over LocalSend's ports.
+- **Adds Windows Firewall rules** for itself (Private and Public networks), with your approval.
+- **Changes only the "date modified"** of files LocalSend has just received.
+- **Adds a start-with-Windows entry** for your user account (can be turned off in Settings).
+- **Keeps its data in `%LOCALAPPDATA%\localsend-dropzone\`**: settings (password encrypted with Windows DPAPI), its own certificate, a list of recently seen devices, and logs (`logs\app.log`, kept 14 days, no passwords or codes in them).
+
+## Build from source
+
+Requires the .NET 10 SDK.
+
+```
+dotnet test
+dotnet publish src/dropzone-app -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
+```
+
+The result is `publish\LocalSendDropzone.exe` (a single file with the .NET runtime included).
+
+Code layout: `src/dropzone-core` (logic, fully tested), `src/dropzone-app` (tray app and drop zone), `tests/dropzone-core-tests`. Design notes and protocol findings (in Chinese) are in `docs/`.
 
 ## License
 
