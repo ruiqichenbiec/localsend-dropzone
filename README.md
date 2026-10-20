@@ -1,7 +1,6 @@
 # LocalSend Dropzone
 
-**Drag a file to the corner of your screen, drop it on a phone or PC, done.**
-A small Windows tray app that adds drag-and-drop sending to [LocalSend](https://localsend.org).
+LocalSend DropZone is an app that extends and enhances the LocalSend desktop app, offering a way to send with LocalSend that is triggered by drag and drop. It lives in the Windows tray and stays out of sight: only when you drag files toward a screen corner does the drop zone appear. Hover over it to see the devices on your network, release, and the files are on their way, all without opening the LocalSend window. It works side by side with the official [LocalSend](https://localsend.org) app and follows the LocalSend protocol for finding devices and transferring files, so phones and other devices keep using the regular app with no changes.
 
 > Unofficial. Not affiliated with or endorsed by the LocalSend project. You still need the official LocalSend app.
 

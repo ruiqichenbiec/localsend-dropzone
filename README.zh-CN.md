@@ -1,7 +1,6 @@
 # LocalSend Dropzone
 
-**把文件拖到屏幕角落，松手在手机或电脑上，就发出去了。**
-一个 Windows 托盘小程序，给 [LocalSend](https://localsend.org) 加上拖放发送。
+LocalSend DropZone是一个用于扩展和增强LocalSend 桌面App的应用，提供了一个通过拖放触发的LocalSend发送方案。它常驻在 Windows 托盘里，平时不露面；当你把文件拖向屏幕角落时，发送区才会出现，悬停就能看到局域网里的设备，松手文件就发出去了，整个过程不需要打开 LocalSend 的窗口。它与官方 [LocalSend](https://localsend.org) 并排工作，发现设备、收发文件都遵循 LocalSend 的协议，手机等其他设备照常使用原版 App，不需要任何改动。
 
 > 非官方工具，与 LocalSend 项目没有关联，也未获其认可。仍然需要安装官方 LocalSend。
 
